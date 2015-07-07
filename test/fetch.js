@@ -6,9 +6,9 @@ require('sinon/lib/sinon/util/event');
 require('sinon/lib/sinon/util/fake_xml_http_request');
 
 (function() {
-  if (typeof window === 'undefined') global.window = {};
-  require('fetch');
-  global.fetch = sinon.spy(window.fetch);
+  if (typeof window === 'undefined') global.self = {};
+  require('whatwg-fetch');
+  global.fetch = sinon.spy(self.fetch);
 })();
 
 XMLHttpRequest = function() {}

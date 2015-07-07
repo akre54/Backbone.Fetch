@@ -19,10 +19,10 @@
   "devDependencies": {
     "backbone": "git://github.com/jashkenas/backbone#cbaa8d144b7560d2b509c1ffbaf6ddb1e3829e6c",
     "chai": "^1.9.1",
-    "fetch": "git://github.com/github/fetch",
     "mocha": "^1.21.4",
     "sinon": "^1.10.3",
     "underscore": "^1.6.0",
+    "whatwg-fetch": "^0.9.0",
     "xmlhttprequest": "^1.6.0"
   }
 }

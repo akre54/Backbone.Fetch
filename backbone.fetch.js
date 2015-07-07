@@ -31,6 +31,7 @@
   var ajax = function(options) {
     if (options.type === 'GET' && typeof options.data === 'object') {
       options.url = stringifyGETParams(options.url, options.data);
+      delete options.data;
     }
 
     return fetch(options.url, defaults(options, {
