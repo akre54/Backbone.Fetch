@@ -1,7 +1,7 @@
-// Backbone.Fetch.js 0.1.0
+// Backbone.Fetch.js 0.2.0
 // ---------------
 
-//     (c) 2014 Adam Krebs
+//     (c) 2015 Adam Krebs
 //     Backbone.Fetch may be freely distributed under the MIT license.
 //     For all details and documentation:
 //     https://github.com/akre54/Backbone.Fetch

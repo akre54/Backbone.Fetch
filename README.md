@@ -15,12 +15,6 @@ tag after you have loaded Backbone in the page.
 If loading with AMD or CommonJS you should set `Backbone.ajax` yourself:
 
 ```js
-// AMD
-define(['backbone', 'backbone.fetch'], function(Backbone, fetch) {
-  Backbone.ajax = fetch;
-});
-
-// CommonJS
 var Backbone = require('backbone');
 Backbone.ajax = require('backbone.fetch');
 ```
