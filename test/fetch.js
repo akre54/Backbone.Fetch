@@ -1,9 +1,10 @@
+global.XMLHttpRequest = function() {
+  this.withCredentials = true;
+};
+
+var sinon = require('sinon');
 var expect = require('chai').expect;
 
-// Bleh. There has to be a better way to test this
-sinon = require('sinon');
-require('sinon/lib/sinon/util/event');
-require('sinon/lib/sinon/util/fake_xml_http_request');
 
 (function() {
   if (typeof window === 'undefined') global.self = {};
@@ -11,12 +12,18 @@ require('sinon/lib/sinon/util/fake_xml_http_request');
   global.fetch = sinon.spy(self.fetch);
 })();
 
-XMLHttpRequest = function() {}
-XMLHttpRequest.prototype = sinon.useFakeXMLHttpRequest().prototype;
-
 var ajax = require('../backbone.fetch');
 
 describe('backbone.fetch', function() {
+  var server;
+
+  beforeEach(function() {
+    server = sinon.fakeServer.create();
+  });
+
+  afterEach(function() {
+    server.restore();
+  });
 
   describe('creating a request', function() {
     it('should pass the method and url to fetch', function() {
@@ -97,25 +104,46 @@ describe('backbone.fetch', function() {
   });
 
   describe('finishing a request', function() {
-    it('should invoke the success callback on complete', function(done) {
-      done();
-      // ajax({
-      //   url: 'test',
-      //   type: 'GET',
-      //   success: function() { done(); },
-      //   error: function() { throw new Error(); }
-      // });
+    it('should invoke the success callback on complete', function() {
+      var promise = ajax({
+        url: 'test',
+        type: 'GET',
+        success: function(response) { 
+          expect(response).to.equal('ok');
+        }
+      });
+      server.respond('ok');
+      return promise;
     });
 
-    it('should invoke the error callback on error', function(done) {
-      done();
-      // ajax({
-      //   url: 'test',
-      //   type: 'GET',
-      //   success: function() { throw new Error; },
-      //   error: function(e) { console.log(arguments); done(); }
-      // });
+    it('should parse response as json if dataType option is provided', function() {
+      var promise = ajax({
+        url: 'test',
+        dataType: 'json',
+        type: 'GET',
+        success: function(response) { 
+          expect(response).to.deep.equal({status: 'ok'});
+        }
+      });
+      server.respond('{"status": "ok"}');
+      return promise;
     });
+
+    it('should invoke the error callback on error', function() {
+      var promise = ajax({
+        url: 'test',
+        type: 'GET',
+        success: function(response) { 
+          throw new Error('this reqest should be failed');
+        },
+        error: function(error) {
+          expect(error.response.status).to.equal(400);
+        }
+      });
+      server.respond([400, {}, 'Server error']);
+      return promise;
+    });
+
   });
 
   describe('Promise', function() {
