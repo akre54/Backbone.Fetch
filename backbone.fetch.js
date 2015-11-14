@@ -56,7 +56,11 @@
       .then(function(response) {
         return options.dataType === 'json' ? response.json(): response.text();
       })
-      .then(options.success, options.error);
+      .then(options.success)
+      .catch(function(e) {
+        options.error(e);
+        throw e;
+      });
   };
 
   if (typeof exports === 'object') {

@@ -129,17 +129,32 @@ describe('backbone.fetch', function() {
       return promise;
     });
 
-    it('should invoke the error callback on error', function() {
+    it('should invoke the error callback on error', function(done) {
       var promise = ajax({
         url: 'test',
         type: 'GET',
-        success: function(response) { 
-          throw new Error('this reqest should be failed');
+        success: function(response) {
+          throw new Error('this request should be failed');
         },
         error: function(error) {
           expect(error.response.status).to.equal(400);
         }
       });
+
+      promise.then(function() {
+        throw new Error('this request should be failed');
+      }).catch(function(error) {
+        if (error.response) {
+          expect(error.response.status).to.equal(400);
+        }
+        else {
+          throw error;
+        }
+        done();
+      }).catch(function(error) {
+        done(error);
+      });
+
       server.respond([400, {}, 'Server error']);
       return promise;
     });
