@@ -1,4 +1,4 @@
-// Backbone.Fetch.js 0.2.0
+// Backbone.Fetch.js 0.2.1
 // ---------------
 
 //     (c) 2015 Adam Krebs
