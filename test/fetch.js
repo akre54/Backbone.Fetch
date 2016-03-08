@@ -93,12 +93,12 @@ describe('backbone.fetch', function() {
         url: 'test',
         type: 'GET',
         headers: {
-          Accept: "custom", 'Content-Type': "custom"
+          Accept: "custom", 'Content-Type': "custom", "X-MyApp-Header": 'present'
         }
       });
 
       sinon.assert.calledWith(fetch, 'test', sinon.match({headers: {
-        Accept: "custom", 'Content-Type': "custom"
+        Accept: "custom", 'Content-Type': "custom", "X-MyApp-Header": 'present'
       }}));
     });
   });
@@ -108,7 +108,7 @@ describe('backbone.fetch', function() {
       var promise = ajax({
         url: 'test',
         type: 'GET',
-        success: function(response) { 
+        success: function(response) {
           expect(response).to.equal('ok');
         }
       });
@@ -121,7 +121,7 @@ describe('backbone.fetch', function() {
         url: 'test',
         dataType: 'json',
         type: 'GET',
-        success: function(response) { 
+        success: function(response) {
           expect(response).to.deep.equal({status: 'ok'});
         }
       });
@@ -134,7 +134,7 @@ describe('backbone.fetch', function() {
         url: 'test',
         type: 'GET',
         success: function(response) {
-          throw new Error('this request should be failed');
+          throw new Error('this request should fail');
         },
         error: function(error) {
           expect(error.response.status).to.equal(400);
@@ -142,12 +142,11 @@ describe('backbone.fetch', function() {
       });
 
       promise.then(function() {
-        throw new Error('this request should be failed');
+        throw new Error('this request should fail');
       }).catch(function(error) {
         if (error.response) {
           expect(error.response.status).to.equal(400);
-        }
-        else {
+        } else {
           throw error;
         }
         done();
@@ -164,17 +163,16 @@ describe('backbone.fetch', function() {
         url: 'test',
         type: 'GET',
         success: function(response) {
-          throw new Error('this request should be failed');
+          throw new Error('this request should fail');
         }
       });
 
       promise.then(function() {
-        throw new Error('this request should be failed');
+        throw new Error('this request should fail');
       }).catch(function(error) {
         if (error.response) {
           expect(error.response.status).to.equal(400);
-        }
-        else {
+        } else {
           throw error;
         }
         done();

@@ -1,7 +1,7 @@
 // Backbone.Fetch.js 0.2.1
 // ---------------
 
-//     (c) 2015 Adam Krebs
+//     (c) 2016 Adam Krebs
 //     Backbone.Fetch may be freely distributed under the MIT license.
 //     For all details and documentation:
 //     https://github.com/akre54/Backbone.Fetch
@@ -44,23 +44,23 @@
       delete options.data;
     }
 
-    return fetch(options.url, defaults(options, {
-        method: options.type,
-        headers: defaults(options.headers || {}, {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }),
-        body: options.data
-      }))
+    defaults(options, {
+      method: options.type,
+      headers: defaults(options.headers || {}, {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }),
+      body: options.data
+    })
+
+    return fetch(options.url, options)
       .then(checkStatus)
       .then(function(response) {
         return options.dataType === 'json' ? response.json(): response.text();
       })
       .then(options.success)
       .catch(function(e) {
-        if (options.error) {
-          options.error(e);
-        }
+        if (options.error) options.error(e);
         throw e;
       });
   };
