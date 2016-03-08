@@ -58,7 +58,9 @@
       })
       .then(options.success)
       .catch(function(e) {
-        options.error(e);
+        if (options.error) {
+          options.error(e);
+        }
         throw e;
       });
   };
