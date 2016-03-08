@@ -144,11 +144,7 @@ describe('backbone.fetch', function() {
       promise.then(function() {
         throw new Error('this request should fail');
       }).catch(function(error) {
-        if (error.response) {
-          expect(error.response.status).to.equal(400);
-        } else {
-          throw error;
-        }
+        expect(error.response.status).to.equal(400);
         done();
       }).catch(function(error) {
         done(error);
@@ -170,11 +166,7 @@ describe('backbone.fetch', function() {
       promise.then(function() {
         throw new Error('this request should fail');
       }).catch(function(error) {
-        if (error.response) {
-          expect(error.response.status).to.equal(400);
-        } else {
-          throw error;
-        }
+        expect(error.response.status).to.equal(400);
         done();
       }).catch(function(error) {
         done(error);
