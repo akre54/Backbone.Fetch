@@ -28,13 +28,19 @@
     return url;
   };
 
-  var checkStatus = function(response) {
+  var checkStatus = function(response, options) {
     if (response.ok) {
       return response;
     } else {
       var error = new Error(response.statusText);
-      error.response = response;
-      throw error;
+
+      var promise = options.dataType === 'json' ? response.json() : response.text();
+      return promise.then(function(responseData) {
+        error.response = response;
+        error.responseData = responseData;
+        if (options.error) options.error(error);
+        throw error;
+      });
     }
   };
 
@@ -54,22 +60,13 @@
     })
 
     return fetch(options.url, options)
-      .then(checkStatus)
       .then(function(response) {
-        return options.dataType === 'json' ? response.json(): response.text();
+        return checkStatus(response, options);
       })
-      .then(options.success)
-      .catch(function(error) {
-        if (error.response) {
-          var promise = options.dataType === 'json' ? error.response.json() : error.response.text();
-          return promise.then(function(responseData) {
-            error.responseData = responseData;
-            if (options.error) options.error(error);
-            throw error;
-          });
-        }
-        throw error;
-      });
+      .then(function(response) {
+        return options.dataType === 'json' ? response.json() : response.text();
+      })
+      .then(options.success);
   };
 
   if (typeof exports === 'object') {
