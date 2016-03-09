@@ -28,22 +28,6 @@
     return url;
   };
 
-  var checkStatus = function(response, options) {
-    if (response.ok) {
-      return response;
-    } else {
-      var error = new Error(response.statusText);
-
-      var promise = options.dataType === 'json' ? response.json() : response.text();
-      return promise.then(function(responseData) {
-        error.response = response;
-        error.responseData = responseData;
-        if (options.error) options.error(error);
-        throw error;
-      });
-    }
-  };
-
   var ajax = function(options) {
     if (options.type === 'GET' && typeof options.data === 'object') {
       options.url = stringifyGETParams(options.url, options.data);
@@ -61,7 +45,17 @@
 
     return fetch(options.url, options)
       .then(function(response) {
-        return checkStatus(response, options);
+        if (response.ok) return response;
+
+        var error = new Error(response.statusText);
+
+        var promise = options.dataType === 'json' ? response.json() : response.text();
+        return promise.then(function(responseData) {
+          error.response = response;
+          error.responseData = responseData;
+          if (options.error) options.error(error);
+          throw error;
+        });
       })
       .then(function(response) {
         return options.dataType === 'json' ? response.json() : response.text();
