@@ -54,7 +54,7 @@
         if (response.ok) return promise;
 
         var error = new Error(response.statusText);
-        promise.then(function(responseData) {
+        return promise.then(function(responseData) {
           error.response = response;
           error.responseData = responseData;
           if (options.error) options.error(error);
