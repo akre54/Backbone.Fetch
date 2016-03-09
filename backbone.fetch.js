@@ -1,4 +1,4 @@
-// Backbone.Fetch.js 0.2.2
+// Backbone.Fetch.js 0.2.3
 // ---------------
 
 //     (c) 2016 Adam Krebs
@@ -54,7 +54,6 @@
         if (response.ok) return promise;
 
         var error = new Error(response.statusText);
-
         promise.then(function(responseData) {
           error.response = response;
           error.responseData = responseData;
