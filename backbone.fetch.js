@@ -28,6 +28,10 @@
     return url;
   };
 
+  var getData = function(response, dataType) {
+    return dataType === 'json' ? response.json() : response.text();
+  };
+
   var ajax = function(options) {
     if (options.type === 'GET' && typeof options.data === 'object') {
       options.url = stringifyGETParams(options.url, options.data);
@@ -43,17 +47,15 @@
       body: options.data
     })
 
-    var getData = function(response) {
-      return options.dataType === 'json' ? response.json() : response.text();
-    }
-
     return fetch(options.url, options)
       .then(function(response) {
-        if (response.ok) return getData(response);
+        var promise = getData(response, options.dataType)
+
+        if (response.ok) return promise;
 
         var error = new Error(response.statusText);
 
-        return getData(response).then(function(responseData) {
+        promise.then(function(responseData) {
           error.response = response;
           error.responseData = responseData;
           if (options.error) options.error(error);
