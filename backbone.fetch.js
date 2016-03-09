@@ -59,9 +59,13 @@
         return options.dataType === 'json' ? response.json(): response.text();
       })
       .then(options.success)
-      .catch(function(e) {
-        if (options.error) options.error(e);
-        throw e;
+      .catch(function(error) {
+        var promise = options.dataType === 'json' ? error.response.json() : error.response.text();
+        return promise.then(function(responseData) {
+          error.responseData = responseData;
+          if (options.error) options.error(error);
+          throw error;
+        });
       });
   };
 

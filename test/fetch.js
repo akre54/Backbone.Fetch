@@ -175,6 +175,46 @@ describe('backbone.fetch', function() {
       server.respond([400, {}, 'Server error']);
       return promise;
     });
+
+    it('should parse json as property of Error on failing request', function(done) {
+        var promise = ajax({
+            dataType: 'json',
+            url: 'test',
+            type: 'GET',
+        });
+
+        promise.then(function() {
+            throw new Error('this request should fail');
+        }).catch(function(error) {
+            expect(error.responseData).to.deep.equal({ code: 'INVALID_HORSE' });
+            done();
+        }).catch(function(error) {
+            done(error);
+        });
+
+        server.respond([400, {}, JSON.stringify({ code: 'INVALID_HORSE' })]);
+        return promise;
+    });
+
+    it('should parse text as property of Error on failing request', function(done) {
+        var promise = ajax({
+            dataType: 'text',
+            url: 'test',
+            type: 'GET',
+        });
+
+        promise.then(function() {
+            throw new Error('this request should fail');
+        }).catch(function(error) {
+            expect(error.responseData).to.equal('Nope');
+            done();
+        }).catch(function(error) {
+            done(error);
+        });
+
+        server.respond([400, {}, 'Nope']);
+        return promise;
+    });
   });
 
   describe('Promise', function() {
