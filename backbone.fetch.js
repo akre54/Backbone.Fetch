@@ -43,22 +43,22 @@
       body: options.data
     })
 
+    var getData = function(response) {
+      return options.dataType === 'json' ? response.json() : response.text();
+    }
+
     return fetch(options.url, options)
       .then(function(response) {
-        if (response.ok) return response;
+        if (response.ok) return getData(response);
 
         var error = new Error(response.statusText);
 
-        var promise = options.dataType === 'json' ? response.json() : response.text();
-        return promise.then(function(responseData) {
+        return getData(response).then(function(responseData) {
           error.response = response;
           error.responseData = responseData;
           if (options.error) options.error(error);
           throw error;
         });
-      })
-      .then(function(response) {
-        return options.dataType === 'json' ? response.json() : response.text();
       })
       .then(options.success);
   };
