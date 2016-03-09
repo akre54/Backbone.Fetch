@@ -229,12 +229,13 @@ describe('backbone.fetch', function() {
     }).catch(function(error) {
         expect(error).to.be.an.instanceof(TypeError);
         expect(error).not.to.have.property('response');
+        expect(error.message).to.equal('Network request failed');
         done();
     }).catch(function(error) {
         done(error);
     });
 
-    server.respond([600, {}, 'Nope']);
+    server.respond([600, {}, 'Network error']);
     return promise;
   });
 
