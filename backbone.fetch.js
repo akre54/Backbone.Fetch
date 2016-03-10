@@ -45,11 +45,11 @@
         'Content-Type': 'application/json'
       }),
       body: options.data
-    })
+    });
 
     return fetch(options.url, options)
       .then(function(response) {
-        var promise = getData(response, options.dataType)
+        var promise = getData(response, options.dataType);
 
         if (response.ok) return promise;
 
