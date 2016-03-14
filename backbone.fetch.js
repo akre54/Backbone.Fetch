@@ -61,7 +61,10 @@
           throw error;
         });
       })
-      .then(options.success);
+      .then(function(responseData) {
+        if (options.success) options.success(responseData);
+        return responseData;
+      });
   };
 
   if (typeof exports === 'object') {

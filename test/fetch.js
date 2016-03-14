@@ -124,6 +124,8 @@ describe('backbone.fetch', function() {
         success: function(response) {
           expect(response).to.deep.equal({status: 'ok'});
         }
+      }).then(function(response) {
+        expect(response).to.deep.equal({status: 'ok'});
       });
       server.respond('{"status": "ok"}');
       return promise;
