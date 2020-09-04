@@ -29,7 +29,7 @@
   };
 
   var getData = function(response, dataType) {
-    return dataType === 'json' ? response.json() : response.text();
+    return dataType === 'json' && response.status !== 204 ? response.json() : response.text();
   };
 
   var ajax = function(options) {
@@ -49,7 +49,9 @@
 
     return fetch(options.url, options)
       .then(function(response) {
-        var promise = getData(response, options.dataType);
+        var promise = options.type === 'HEAD'
+          ? Promise.resolve(null)
+          : getData(response, options.dataType);
 
         if (response.ok) return promise;
 
